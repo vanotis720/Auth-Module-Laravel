@@ -40,6 +40,10 @@ Route::middleware('auth')->group(function () {
         return 'User is logged in';
     })->name('home');
 
+    Route::get('/home', function() {
+        return 'User is logged in';
+    })->name('home');
+
     Route::get('/profil', [AuthController::class, 'getUser'])->name('profil');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 

@@ -75,7 +75,18 @@
         }
 
         .google {
-            background-color: #457fc7;
+            background-color: #723838;
+            color: #fff;
+            font-size: 18px;
+            padding-top: 5px;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer
+        }
+
+        .github {
+            background-color: #1e2024;
             color: #fff;
             font-size: 18px;
             padding-top: 5px;
@@ -216,46 +227,52 @@
                             <div class="facebook text-center mr-3">
                                 <a href="{{ route('socialite.redirect', 'facebook') }}"><div class="fa fa-facebook"></div></a>
                             </div>
-                            <div class="twitter text-center mr-3">
+                            {{-- <div class="twitter text-center mr-3">
                                 <a href="{{ route('socialite.redirect', 'twitter') }}"><div class="fa fa-twitter"></div></a>
-                            </div>
+                            </div> --}}
                             <div class="linkedin text-center mr-3">
                                 <a href="{{ route('socialite.redirect', 'linkedin') }}"><div class="fa fa-linkedin"></div></a>
                             </div>
                             <div class="google text-center mr-3">
                                 <a href="{{ route('socialite.redirect', 'google') }}"><div class="fa fa-google"></div></a>
                             </div>
+                            <div class="github text-center mr-3">
+                                <a href="{{ route('socialite.redirect', 'github') }}"><div class="fa fa-github"></div></a>
+                            </div>
                         </div>
                         <div class="row px-3 mb-4">
                             <div class="line"></div> <small class="or text-center">Ou</small>
                             <div class="line"></div>
                         </div>
-                        <div class="row px-3"> 
-                            <label class="mb-1">
-                                <h6 class="mb-0 text-sm">Adresse e-mail</h6>
-                            </label>
-                            <input class="mb-4" type="text" name="email" placeholder="entrez une adresse e-mail valide"> </div>
-                        <div class="row px-3">
-                            <label class="mb-1">
-                                <h6 class="mb-0 text-sm">Mot de passe</h6>
-                            </label>
-                            <input type="password" name="password" placeholder="Entrer le mot de passe">
-                        </div>
-                        <div class="row px-3 mb-4">
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                                <input id="chk1" type="checkbox" name="chk" class="custom-control-input">
-                                <label for="chk1" class="custom-control-label text-sm">Se souvenir de moi</label>
+                        <form action="{{ route('login.post') }}" method="POST">
+                            @csrf
+                            <div class="row px-3">
+                                <label class="mb-1">
+                                    <h6 class="mb-0 text-sm">Adresse e-mail</h6>
+                                </label>
+                                <input class="mb-4" type="email" name="email" placeholder="entrez une adresse e-mail valide"> </div>
+                            <div class="row px-3">
+                                <label class="mb-1">
+                                    <h6 class="mb-0 text-sm">Mot de passe</h6>
+                                </label>
+                                <input type="password" name="password" placeholder="Entrer le mot de passe">
                             </div>
-                            <a href="#" class="ml-auto mb-0 text-sm">Mot de passe oublié?</a>
-                        </div>
-                        <div class="row mb-3 px-3">
-                            <button type="submit" class="btn btn-blue text-center">Connexion</button>
-                        </div>
-                        <div class="row mb-4 px-3">
-                            <small class="font-weight-bold">Vous n'avez pas de compte ? 
-                                <a class="text-danger ">S'inscrire</a>
-                            </small>
-                        </div>
+                            <div class="row px-3 mb-4">
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input id="chk1" type="checkbox" name="chk" class="custom-control-input">
+                                    <label for="chk1" class="custom-control-label text-sm">Se souvenir de moi</label>
+                                </div>
+                                <a href="#" class="ml-auto mb-0 text-sm">Mot de passe oublié?</a>
+                            </div>
+                            <div class="row mb-3 px-3">
+                                <button type="submit" class="btn btn-blue text-center">Connexion</button>
+                            </div>
+                            <div class="row mb-4 px-3">
+                                <small class="font-weight-bold">Vous n'avez pas de compte ? 
+                                    <a type="submit" class="text-danger">S'inscrire</a>
+                                </small>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -10,8 +10,19 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
 use Irazasyed\LaravelIdenticon\Identicon;
 
+
 class AuthController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
+
     // Les tableaux des providers autorisés
     protected $providers = [ "google", "github", "facebook","linkedin"];
 
@@ -30,36 +41,37 @@ class AuthController extends Controller
         $provider = $request->provider;
 
         if (in_array($provider, $this->providers)) {
-
-        	$data = Socialite::driver($request->provider)->user();
             
-            $username = $data->getNickname() ?? $data->getName();
-            $email = $data->getEmail();
-
-            $user = User::where("email", $email)->first();
-
-            # Si l'utilisateur existe
-            if (isset($user)) {
-
-                // Mise à jour des informations de l'utilisateur
-                $user->username = $username;
-                $user->save();
-            } 
-            else {
-                
-                // Enregistrement de l'utilisateur
-                $user = User::create([
-                    'username' => $username,
-                    'email' => $email,
-                    'password' => bcrypt($data->getEmail()),
-                    'avatar' => $data->getAvatar(),
-                ]);
-            }
-            Auth::login($user);
-
-            if (auth()->check()) return redirect(route('home'));
+            $user = Socialite::driver($provider)->user();
+            $authUser = $this->findOrCreateUser($user, $provider);
+            Auth::login($authUser, true);
+            
+            return redirect(route('home'));
         }
         abort(404);
+    }
+
+    /**
+     * If a user has registered before using social auth, return the user
+     * else, create a new user object.
+     * @param  $user Socialite user object
+     * @param $provider Social auth provider
+     * @return  User
+     */
+    public function findOrCreateUser($user, $provider)
+    {
+        $authUser = User::where('provider_id', $user->id)->first();
+        if ($authUser) {
+            return $authUser;
+        }
+
+        return User::create([
+            'username' => $user->getNickname() ?? $user->getName(),
+            'email'    => $user->email,
+            'avatar' => $user->getAvatar(),
+            'provider' => $provider,
+            'provider_id' => $user->id
+        ]);
     }
 
     public function register(Request $request)

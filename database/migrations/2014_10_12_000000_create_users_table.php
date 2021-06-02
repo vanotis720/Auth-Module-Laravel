@@ -18,8 +18,10 @@ class CreateUsersTable extends Migration
             $table->string('username');
             $table->string('email',250)->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->text('avatar');
+            $table->text('provider')->nullable();
+            $table->text('provider_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
