@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Login - Auth Module</title>
+    <title>Forgot password - Auth Module</title>
     <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet'>
     <style>
@@ -229,54 +229,25 @@
                             </div>
                         @endif
                         <div class="row mb-4 px-3">
-                            <h6 class="mb-0 mr-4 mt-2">Connectez-vous avec</h6>
-                            <div class="facebook text-center mr-3">
-                                <a href="{{ route('socialite.redirect', 'facebook') }}"><div class="fa fa-facebook"></div></a>
-                            </div>
-                            {{-- <div class="twitter text-center mr-3">
-                                <a href="{{ route('socialite.redirect', 'twitter') }}"><div class="fa fa-twitter"></div></a>
-                            </div> --}}
-                            <div class="linkedin text-center mr-3">
-                                <a href="{{ route('socialite.redirect', 'linkedin') }}"><div class="fa fa-linkedin"></div></a>
-                            </div>
-                            <div class="google text-center mr-3">
-                                <a href="{{ route('socialite.redirect', 'google') }}"><div class="fa fa-google"></div></a>
-                            </div>
-                            <div class="github text-center mr-3">
-                                <a href="{{ route('socialite.redirect', 'github') }}"><div class="fa fa-github"></div></a>
-                            </div>
+                            <h6 class="mb-0 mr-4 mt-2">Reset Password</h6>
                         </div>
-                        <div class="row px-3 mb-4">
-                            <div class="line"></div> <small class="or text-center">Ou</small>
-                            <div class="line"></div>
-                        </div>
-                        <form action="{{ route('login.post') }}" method="POST">
+                        <form action="{{ route('password.email') }}" method="POST">
                             @csrf
                             <div class="row px-3">
                                 <label class="mb-1">
-                                    <h6 class="mb-0 text-sm">Adresse e-mail</h6>
+                                    <h6 class="mb-0 text-sm">E-mail adress</h6>
                                 </label>
-                                <input class="mb-4" type="email" name="email" placeholder="entrez une adresse e-mail valide">
-                            </div>
-                            <div class="row px-3">
-                                <label class="mb-1">
-                                    <h6 class="mb-0 text-sm">Mot de passe</h6>
-                                </label>
-                                <input type="password" name="password" placeholder="Entrer le mot de passe">
-                            </div>
-                            <div class="row px-3 mb-4">
-                                <div class="custom-control custom-checkbox custom-control-inline">
-                                    <input id="chk1" type="checkbox" name="remember" class="custom-control-input">
-                                    <label for="chk1" class="custom-control-label text-sm">Se souvenir de moi</label>
-                                </div>
-                                <a href="{{ route('password.request') }}" class="ml-auto mb-0 text-sm">Mot de passe oublié?</a>
+                                <input class="mb-4" type="email" name="email" placeholder="Enter your e-mail adress" value="{{ old('email') }}" required autofocus>
+                                @error('email')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="row mb-3 px-3">
-                                <button type="submit" class="btn btn-blue text-center">Connexion</button>
+                                <button type="submit" class="btn btn-blue text-center">Send Reset Link</button>
                             </div>
                             <div class="row mb-4 px-3">
-                                <small class="font-weight-bold">Vous n'avez pas de compte ? 
-                                    <a href="{{ url('register') }}" class="text-danger">S'inscrire</a>
+                                <small class="font-weight-bold">You do not have an account ?
+                                    <a href="{{ url('register') }}" class="text-danger">Register now</a>
                                 </small>
                             </div>
                         </form>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,18 +23,26 @@ Route::get('register', function(){
     return view('register');
 });
 
-// post login data
 Route::post('register', [AuthController::class, 'register'])->name('register.post');
 Route::post('login', [AuthController::class, 'login'])->name('login.post');
 
-// social login
-// Route::get("login-register", "SocialiteController@loginRegister");
-
-// La redirection vers le provider
+// Redirection to the provider
 Route::get("redirect/{provider}", [AuthController::class, 'redirect'])->name('socialite.redirect');
 
-// Le callback du provider
+// The provider callback
 Route::get("callback/{provider}", [AuthController::class, 'callback'])->name('socialite.callback');
+
+// reset password
+Route::get('/forgot-password', function () {
+    return view('password.forgot');
+})->name('password.request');
+
+Route::post('/forget-password', [ForgotPasswordController::class, 'sendLink'])->name('password.email');
+
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'getPassword']);
+Route::post('/reset-password', [ForgotPasswordController::class, 'updatePassword'])->name('password.update');
+
+
 
 Route::middleware('auth')->group(function () {
 
@@ -45,7 +54,7 @@ Route::middleware('auth')->group(function () {
         return 'User is logged in';
     })->name('home');
 
-    Route::get('/profil', [AuthController::class, 'getUser'])->name('profil');
+    Route::get('profil', [AuthController::class, 'getUser'])->name('profil');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 });

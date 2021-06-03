@@ -13,6 +13,9 @@ use Irazasyed\LaravelIdenticon\Identicon;
 
 class AuthController extends Controller
 {
+    // Tables of authorized providers
+    protected $providers = [ "google", "github", "facebook","linkedin"];
+    
     /**
      * Create a new controller instance.
      *
@@ -20,11 +23,8 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest')->except('logout','getUser');
     }
-
-    // Les tableaux des providers autorisés
-    protected $providers = [ "google", "github", "facebook","linkedin"];
 
     public function redirect (Request $request) {
 
@@ -83,22 +83,20 @@ class AuthController extends Controller
             'password' => 'bail|required|confirmed'
         ]);
 
-        // create avatar with identicon
+        // create user avatar with identicon
         $identicon = new Identicon();
         $avatar =  $identicon->getImageData($validatedData['email'],250);
+
         $url = 'avatars/'. $validatedData['username'] .'_'. time();
         Storage::disk('public')->put($url, $avatar);
-
         $validatedData['avatar'] = $url;
+
         $validatedData['password'] = bcrypt($request->password);
 
         $user = User::create($validatedData);
 
         if ($user) {
-            // Auth::attempt($request->only('email','password'));
             Auth::login($user);
-            // $request->session()->regenerate();
-
             return redirect('/');
         }
         else {
@@ -121,7 +119,6 @@ class AuthController extends Controller
 
             return redirect('/');
         }
-
         return redirect()->back()->withInput($request->only('email'))->withError('user or password not correct');
     }
 
@@ -134,7 +131,4 @@ class AuthController extends Controller
         Auth::logout();
         return redirect('/login')->withMsg('logged out successfully');
     }
-
-    // TODO: login and signin via social network
-
 }

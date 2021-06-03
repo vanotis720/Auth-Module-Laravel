@@ -172,6 +172,7 @@
 
         .btn-blue:hover {
             background-color: #000;
+            color: rgb(168, 35, 35);
             cursor: pointer
         }
 
