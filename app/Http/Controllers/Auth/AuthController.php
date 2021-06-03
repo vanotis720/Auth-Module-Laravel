@@ -45,7 +45,7 @@ class AuthController extends Controller
             $user = Socialite::driver($provider)->user();
             $authUser = $this->findOrCreateUser($user, $provider);
             Auth::login($authUser, true);
-            
+
             return redirect(route('home'));
         }
         abort(404);
@@ -95,8 +95,9 @@ class AuthController extends Controller
         $user = User::create($validatedData);
 
         if ($user) {
-            Auth::attempt($request->only('email','password'));
-            $request->session()->regenerate();
+            // Auth::attempt($request->only('email','password'));
+            Auth::login($user);
+            // $request->session()->regenerate();
 
             return redirect('/');
         }
@@ -112,12 +113,11 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $loginData = $request->all();
+        $remember = $request->has('remember') ? true : false;
 
         $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         
-        if (Auth::attempt([$fieldType => $loginData['email'], 'password' => $loginData['password']])) {
-            $request->session()->regenerate();
+        if (Auth::attempt([$fieldType => $request->email, 'password' => $request->password], $remember)) {
 
             return redirect('/');
         }
@@ -130,7 +130,7 @@ class AuthController extends Controller
         return auth()->user();
     }
 
-    public function logout(Request $request) {
+    public function logout() {
         Auth::logout();
         return redirect('/login')->withMsg('logged out successfully');
     }

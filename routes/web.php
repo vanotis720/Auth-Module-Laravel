@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 
@@ -37,7 +38,7 @@ Route::get("callback/{provider}", [AuthController::class, 'callback'])->name('so
 Route::middleware('auth')->group(function () {
 
     Route::get('/', function() {
-        return 'User is logged in';
+        return (Auth::viaRemember()) ? 'User is logged in via remember' : 'user logged in';
     })->name('home');
 
     Route::get('/home', function() {
@@ -45,6 +46,6 @@ Route::middleware('auth')->group(function () {
     })->name('home');
 
     Route::get('/profil', [AuthController::class, 'getUser'])->name('profil');
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 });
